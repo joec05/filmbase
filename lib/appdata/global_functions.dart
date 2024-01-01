@@ -402,29 +402,42 @@ Future<void> delayNavigationPush(BuildContext context, Widget page) async{
 }
 
 String getLastDayOfMonth(){
-  DateTime nextMonth = DateTime.now().add(const Duration(days: 30));
-  DateTime lastDayOfThisMonth = DateTime(nextMonth.year, nextMonth.month, 1).subtract(const Duration(seconds: 1));
-  String stringified = lastDayOfThisMonth.toString();
+  DateTime now = DateTime.now();
+  DateTime lastDayOfThisMonth = DateTime(
+    now.month == 12 ? now.year + 1 : now.year, 
+    now.month + 1 <= 12 ? now.month + 1 : 1, 
+    1
+  ).subtract(const Duration(seconds: 1));
+  String stringified = lastDayOfThisMonth.toIso8601String();
   return stringified.split(' ')[0];
 }
 
 String getFirstDayOfMonth(){
   DateTime thisMonth = DateTime.now();
   DateTime firstDayOfThisMonth = DateTime(thisMonth.year, thisMonth.month, 1);
-  String stringified = firstDayOfThisMonth.toString();
+  String stringified = firstDayOfThisMonth.toIso8601String();
   return stringified.split(' ')[0];
 }
 
 String getLastDayOfNextMonth(){
-  DateTime nextTwoMonths = DateTime.now().add(const Duration(days: 60));
+  DateTime now = DateTime.now();
+  DateTime nextTwoMonths = DateTime(
+    now.month == 11 ? now.year + 1 : now.year, 
+    now.month + 2 <= 12 ? now.month + 2 : (now.month + 2) % 12, 
+    1
+  );
   DateTime lastDayOfNextMonth = DateTime(nextTwoMonths.year, nextTwoMonths.month, 1).subtract(const Duration(seconds: 1));
-  String stringified = lastDayOfNextMonth.toString();
+  String stringified = lastDayOfNextMonth.toIso8601String();
   return stringified.split(' ')[0];
 }
 
 String getFirstDayOfNextMonth(){
-  DateTime nextMonth = DateTime.now().add(const Duration(days: 30));
-  DateTime firstDayOfNextMonth = DateTime(nextMonth.year, nextMonth.month, 1);
-  String stringified = firstDayOfNextMonth.toString();
+  DateTime now = DateTime.now();
+  DateTime firstDayOfNextMonth = DateTime(
+    now.month == 12 ? now.year + 1 : now.year,
+    now.month + 1 <= 12 ? now.month + 1 : 1, 
+    1
+  );
+  String stringified = firstDayOfNextMonth.toIso8601String();
   return stringified.split(' ')[0];
 }

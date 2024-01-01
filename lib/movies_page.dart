@@ -117,7 +117,7 @@ class _MoviesPageStatefulState extends State<_MoviesPageStateful> with Automatic
 
     List<String> labels = [
       '',
-      'Now Playing',
+      'This Month',
       'Popular',
       'Top Rated',
       'Upcoming'
