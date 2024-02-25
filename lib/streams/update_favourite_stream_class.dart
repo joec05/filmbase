@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:filmbase/appdata/global_enums.dart';
+import 'package:filmbase/global_files.dart';
 
 class FavouriteStreamControllerClass{
   final UpdateStreamActionType actionType;

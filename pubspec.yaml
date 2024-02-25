@@ -45,6 +45,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   carousel_slider: ^4.2.1
   cached_network_image: ^3.3.0
+  index_generator: ^3.4.1
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,21 @@ flutter_icons:
   image_path_ios: "assets/images/icon.jpg"
   android: true
   ios: true 
+
+flutter_native_splash:
+  image: assets/images/icon.png
+  color: "ffffff"
+  android: true
+  android_12:
+    image: assets/images/icon.png
+  ios: true
+
+index_generator:
+  exclude:
+    - '**.g.dart'
+  indexes:
+    - path: lib
+      name: global_files
 
 # The following section is specific to Flutter packages.
 flutter:

@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:filmbase/appdata/global_variables.dart';
-import 'package:filmbase/class/api_identifiers_class.dart';
-import 'package:filmbase/state/main.dart';
+import 'package:filmbase/global_files.dart';
 
 class AppStorageClass{
   final storage = const FlutterSecureStorage(
@@ -10,9 +8,10 @@ class AppStorageClass{
       encryptedSharedPreferences: true,
     )
   );
+  String apiIdentifiersDataKey = 'api-identifiers';
 
   void updateAPIIdentifiers() async{
-    storage.write(key: apiIdentifiersDataKey, value: jsonEncode(appStateClass.apiIdentifiers.toMap()));
+    storage.write(key: apiIdentifiersDataKey, value: jsonEncode(appStateRepo.apiIdentifiers.toMap()));
   }
 
   void resetAPIIdentifiers() async{
