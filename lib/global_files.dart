@@ -22,6 +22,8 @@ export 'constants/streams/enums.dart';
 export 'constants/time/functions.dart';
 export 'constants/ui/functions.dart';
 export 'controllers/handler/handler_controller.dart';
+export 'controllers/main_page_controller.dart';
+export 'controllers/movies_controller.dart';
 export 'extensions/string_ellipsis.dart';
 export 'limit/variables.dart';
 export 'models/api_identifiers_class.dart';

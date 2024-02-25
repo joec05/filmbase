@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,14 +37,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  AssetImage assetImage = const AssetImage('assets/images/icon.jpg');
-
+  
   @override
   void initState(){
     super.initState();
-    Timer(const Duration(milliseconds: 1500), (){
-      initialize();
-    });
+    authRepo.initialize(context);
   }
 
   @override
@@ -53,69 +49,13 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void initialize() async{
-    APIIdentifiersClass apiIdentifiersClass = await appStateRepo.appStorage.fetchAPIIdentifiers();
-    if(apiIdentifiersClass.sessionID == null){
-      String? requestToken = await authRepo.generateRequestToken();
-      if(requestToken != null && mounted){
-        await Navigator.push(
-          context,
-          NavigationTransition(
-            page: ConnectAccountPage(
-              url: 'https://www.themoviedb.org/authenticate/$requestToken'
-            )
-          )
-        );
-        var res = await authRepo.generateSessionID(requestToken);
-        if(res != null){
-          appStateRepo.apiIdentifiers.sessionID = res['session_id'];
-          apiCallRepo.updateUserID();
-          apiCallRepo.fetchUserData();
-          if(mounted){
-            Navigator.pushAndRemoveUntil(
-              context,
-              NavigationTransition(
-                page: const MainPageWidget()
-              ),
-              (Route<dynamic> route) => false
-            );
-          }
-        }
-      }
-    }else{
-      appStateRepo.apiIdentifiers = apiIdentifiersClass;
-      apiCallRepo.fetchUserData();
-      if(mounted){
-        Navigator.pushAndRemoveUntil(
-          context,
-          NavigationTransition(
-            page: const MainPageWidget()
-          ),
-          (Route<dynamic> route) => false
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    precacheImage(assetImage, context);
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: defaultAppBarDecoration,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image(
-              image: assetImage,
-              width: getScreenWidth() * 0.4, 
-              height: getScreenWidth() * 0.4
-            ),
-          ],
-        )
+        decoration: defaultAppBarDecoration
       )
     );
   }

@@ -19,139 +19,29 @@ class _MainPageWidgetStateful extends StatefulWidget {
 }
 
 class __MainPageWidgetStatefulState extends State<_MainPageWidgetStateful>{
-  ValueNotifier<int> selectedIndexValue = ValueNotifier(0);
-  final PageController _pageController = PageController(initialPage: 0, keepPage: true, );
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  late MainPageController controller;
 
   @override void initState(){
     super.initState();
-    apiCallRepo.fetchMovieGenres();
-    apiCallRepo.fetchTvSeriesGenres();
-  }
-
-  void resetBottomNavIndex(){
-    _pageController.jumpToPage(0);
-  }
-
-  @override void dispose(){
-    super.dispose();
-    selectedIndexValue.dispose();
-    _pageController.dispose();
-  }
-
-  void onPageChanged(newIndex){
-    if(mounted){
-      selectedIndexValue.value = newIndex;
-    }
-  }
-
-  final List<Widget> widgetOptions = <Widget>[
-    const MoviesPage(),
-    const TvSeriesPage(),
-    const PeoplePage()
-  ];
-
-  PreferredSizeWidget setAppBar(index){
-    if(index == 0){
-      return AppBar(
-        flexibleSpace: Container(
-          decoration: defaultAppBarDecoration
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text('Movies'),
-            InkWell(
-              splashFactory: InkSplash.splashFactory,
-              onTap: (){
-                delayNavigationPush(
-                  context,
-                  const SearchPageWidget()
-                );
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(12.5),
-                child: Icon(FontAwesomeIcons.magnifyingGlass, size: 22.5),
-              ),
-            ),
-          ]
-        ), 
-        titleSpacing: defaultAppBarTitleSpacing,
-      );
-    }else if(index == 1){
-      return AppBar(
-        flexibleSpace: Container(
-          decoration: defaultAppBarDecoration
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text('TV Shows'),
-            InkWell(
-              splashFactory: InkSplash.splashFactory,
-              onTap: (){
-                delayNavigationPush(
-                  context,
-                  const SearchPageWidget()
-                );
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(12.5),
-                child: Icon(FontAwesomeIcons.magnifyingGlass, size: 22.5),
-              ),
-            ),
-          ]
-        ),
-        titleSpacing: defaultAppBarTitleSpacing,
-      );
-    }else if(index == 2){
-      return AppBar(
-        flexibleSpace: Container(
-          decoration: defaultAppBarDecoration
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text('People'),
-            InkWell(
-              splashFactory: InkSplash.splashFactory,
-              onTap: (){
-                delayNavigationPush(
-                  context,
-                  const SearchPageWidget()
-                );
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(12.5),
-                child: Icon(FontAwesomeIcons.magnifyingGlass, size: 22.5),
-              ),
-            ),
-          ]
-        ),
-        titleSpacing: defaultAppBarTitleSpacing,
-      );
-    }
-    return AppBar();
+    controller = MainPageController(context);
+    controller.initializeController();
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: selectedIndexValue,
+      valueListenable: controller.selectedIndexValue,
       builder: (BuildContext context, int selectedIndexValue, Widget? child) {
         return Scaffold(
-          key: scaffoldKey,
+          key: controller.scaffoldKey,
           drawerEdgeDragWidth: 0.85 * getScreenWidth(),
           onDrawerChanged: (isOpened) {
           },
-          appBar: setAppBar(selectedIndexValue),
+          appBar: controller.setAppBar(selectedIndexValue),
           body: PageView(
-            controller: _pageController,
-            onPageChanged: onPageChanged,
-            children: widgetOptions,
+            controller: controller.pageController,
+            onPageChanged: controller.onPageChanged,
+            children: controller.widgetOptions,
           ),
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: const Color.fromARGB(255, 77, 127, 150).withOpacity(0.35),
@@ -174,7 +64,7 @@ class __MainPageWidgetStatefulState extends State<_MainPageWidgetStateful>{
             ],
             currentIndex: selectedIndexValue,
             onTap: ((index) {
-              _pageController.jumpToPage(index);
+              controller.pageController.jumpToPage(index);
             })
           ),
           drawer: DrawerNavigator(key: UniqueKey(), parentContext: context)
