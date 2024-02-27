@@ -1,43 +1,37 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:filmbase/global_files.dart';
 
-class SearchedPeopleController {
+class RatedEpisodesController {
   final BuildContext context;
-  final String searchedText;
-  ValueNotifier<List<int>> people = ValueNotifier([]);
+  ValueNotifier<List<int>> rated = ValueNotifier([]);
   ValueNotifier<int> totalResults = ValueNotifier(0);
   ValueNotifier<PaginationStatus> paginationStatus = ValueNotifier(PaginationStatus.loaded);
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
+  ValueNotifier<bool> isLoading = ValueNotifier(true);
 
-  SearchedPeopleController(
-    this.context,
-    this.searchedText
+  RatedEpisodesController(
+    this.context
   );
 
   bool get mounted => context.mounted;
 
   void initializeController() {
-    if(searchedText.isNotEmpty){
-      isLoading.value = true;
-      fetchSearchedPeople(1);
-    }
+    fetchRatedEpisodes(1);
   }
 
   void dispose(){
-    people.dispose();
+    rated.dispose();
     totalResults.dispose();
     paginationStatus.dispose();
     isLoading.dispose();
   }
 
-  void fetchSearchedPeople(int page) async{
-    List<int> getSearchedPeople = await runFetchBasicPeopleAPI(
-      '$mainAPIUrl/search/person?query=$searchedText&page=$page'
+  void fetchRatedEpisodes(int page) async{
+    List<int> getRatedEpisodes = await runFetchAPI(
+      '$mainAPIUrl/account/${appStateRepo.apiIdentifiers.userID}/rated/tv/episodes?page=$page'
     );
 
     if(mounted){
-      people.value = [...people.value, ...getSearchedPeople];
+      rated.value = [...rated.value, ...getRatedEpisodes];
       paginationStatus.value = PaginationStatus.loaded;
       isLoading.value = false;
     }
@@ -47,30 +41,34 @@ class SearchedPeopleController {
     if(mounted){
       paginationStatus.value = PaginationStatus.loading;
       Future.delayed(Duration(milliseconds: paginateDelayDuration), (){
-        fetchSearchedPeople(
-          people.value.length ~/ 20 + 1
+        fetchRatedEpisodes(
+          rated.value.length ~/ 20 + 1
         );
       });
     }
   }
 
-  Future<List<int>> runFetchBasicPeopleAPI(String url) async{
-    List<int> ids = [];
+  Future<List<int>> runFetchAPI(String url) async{
+    List<int> episodes = [];
+    List<int> showsID = [];
     var res = await dio.get(
       url,
       options: defaultAPIOption
     );
     if(res.statusCode == 200){
-      totalResults.value = min(maxSearchedResultsCount, res.data['total_results']);
+      totalResults = res.data['total_results'];
       var data = res.data['results'];
       for(int i = 0; i < data.length; i++){
-        var detailsReq = await dio.get(
-          '$mainAPIUrl/person/${data[i]['id']}',
-          options: defaultAPIOption
-        );
-        if(detailsReq.statusCode == 200){
-          ids.add(data[i]['id']);
-          updatePeopleBasicData(detailsReq.data);
+        if(!showsID.contains(data[i]['show_id'])){
+          var getShowRes = await dio.get(
+            '$mainAPIUrl/tv/${data[i]['show_id']}',
+            options: defaultAPIOption
+          );
+          if(getShowRes.statusCode == 200){
+            updateTvSeriesBasicData(getShowRes.data);
+            updateEpisodeBasicData(data[i]);
+            episodes.add(data[i]['id']);
+          }
         }
       }
     }else{
@@ -82,6 +80,6 @@ class SearchedPeopleController {
         );
       }
     }
-    return ids;
-  }
+    return episodes;
+  } 
 }

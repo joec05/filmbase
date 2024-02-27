@@ -44,128 +44,69 @@ class _ViewEpisodeDetailsStateful extends StatefulWidget {
 }
 
 class _ViewEpisodeDetailsStatefulState extends State<_ViewEpisodeDetailsStateful>{
-  bool isLoading = true;
+  late EpisodeDetailsController controller;
 
   @override
   void initState(){
     super.initState();
-    fetchEpisodeDetails();
+    controller = EpisodeDetailsController(
+      context,
+      widget.episodeID,
+      widget.showID,
+      widget.seasonNum,
+      widget.episodeNum
+    );
+    controller.initializeController();
   }
 
   @override
   void dispose(){
     super.dispose();
-  }
-
-  void fetchEpisodeDetails() async{
-    var res = await dio.get(
-      '$mainAPIUrl/tv/${widget.showID}/season/${widget.seasonNum}/episode/${widget.episodeNum}',
-      options: defaultAPIOption
-    );
-    if(res.statusCode == 200){
-      var data = res.data;
-      var episodeStatusRes = await dio.get(
-        '$mainAPIUrl/tv/${widget.showID}/season/${widget.seasonNum}/episode/${widget.episodeNum}/account_states',
-        options: defaultAPIOption
-      );
-      if(episodeStatusRes.statusCode == 200){
-        data['rating'] = episodeStatusRes.data['rated'] != false ? episodeStatusRes.data['rated']['value'] : 0.0;
-        var creditsRes = await dio.get(
-          '$mainAPIUrl/tv/${widget.showID}/season/${widget.seasonNum}/episode/${widget.episodeNum}/credits',
-          options: defaultAPIOption
-        );
-        if(creditsRes.statusCode == 200){
-          data['casts'] = creditsRes.data['cast'];
-          data['crews'] = creditsRes.data['crew'];
-          data['guest_stars'] = creditsRes.data['guest_stars'];
-          var imagesRes = await dio.get(
-            '$mainAPIUrl/tv/${widget.showID}/season/${widget.seasonNum}/episode/${widget.episodeNum}/images',
-            options: defaultAPIOption
-          );
-          if(imagesRes.statusCode == 200){
-            data['images'] = imagesRes.data['stills'];
-            data['show_id'] = widget.showID;
-            if(mounted){
-              setState((){
-                updateEpisodeData(data);
-                isLoading = false;
-              });
-            }
-          }else{
-            if(mounted){
-              handler.displaySnackbar(
-                context, 
-                SnackbarType.error, 
-                tErr.api
-              );
-            }
-          }
-        }else{
-          if(mounted){
-            handler.displaySnackbar(
-              context, 
-              SnackbarType.error, 
-              tErr.api
-            );
-          }
-        }
-      }else{
-        if(mounted){
-          handler.displaySnackbar(
-            context, 
-            SnackbarType.error, 
-            tErr.api
-          );
-        }
-      }
-    }else{
-      if(mounted){
-        handler.displaySnackbar(
-          context, 
-          SnackbarType.error, 
-          tErr.api
-        );
-      }
-    }
+    controller.dispose();
   }
 
   @override
   Widget build(BuildContext context){
-    if(!isLoading && appStateRepo.globalEpisodes[widget.episodeID] != null){
-      return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: defaultAppBarDecoration
-          ),
-          title: setAppBarTitle('Episode Details'),
-        ),
-        body: ValueListenableBuilder(
-          valueListenable: appStateRepo.globalEpisodes[widget.episodeID]!.notifier,
-          builder: (context, episodeData, child){
-            return CustomEpisodeDetails(
-              episodeData: episodeData, 
-              skeletonMode: false,
-              key: UniqueKey()
-            );
-          },
-        ),
-      );
-    }else{
-      return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: defaultAppBarDecoration
-          ),
-          title: setAppBarTitle('Episode Details'),
-        ),
-        body: shimmerSkeletonWidget(
-          CustomEpisodeDetails(
-            episodeData: EpisodeDataClass.generateNewInstance(-1), 
-            skeletonMode: true,
-            key: UniqueKey()
-          ),
-        ),
-      );
-    }
+    return ValueListenableBuilder(
+      valueListenable: controller.isLoading,
+      builder: (context, isLoading, child) {
+        if(!isLoading && appStateRepo.globalEpisodes[widget.episodeID] != null){
+          return Scaffold(
+            appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: defaultAppBarDecoration
+              ),
+              title: setAppBarTitle('Episode Details'),
+            ),
+            body: ValueListenableBuilder(
+              valueListenable: appStateRepo.globalEpisodes[widget.episodeID]!.notifier,
+              builder: (context, episodeData, child){
+                return CustomEpisodeDetails(
+                  episodeData: episodeData, 
+                  skeletonMode: false,
+                  key: UniqueKey()
+                );
+              },
+            ),
+          );
+        }else{
+          return Scaffold(
+            appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: defaultAppBarDecoration
+              ),
+              title: setAppBarTitle('Episode Details'),
+            ),
+            body: shimmerSkeletonWidget(
+              CustomEpisodeDetails(
+                episodeData: EpisodeDataClass.generateNewInstance(-1), 
+                skeletonMode: true,
+                key: UniqueKey()
+              ),
+            ),
+          );
+        }
+      }
+    );
   }
 }

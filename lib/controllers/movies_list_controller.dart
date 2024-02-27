@@ -1,43 +1,37 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:filmbase/global_files.dart';
 
-class SearchedMoviesController {
+class MoviesListController {
   final BuildContext context;
-  final String searchedText;
+  final String urlParam;
   ValueNotifier<List<int>> movies = ValueNotifier([]);
-  ValueNotifier<int> totalResults = ValueNotifier(0);
   ValueNotifier<PaginationStatus> paginationStatus = ValueNotifier(PaginationStatus.loaded);
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
+  ValueNotifier<int> totalResults = ValueNotifier(0);
+  ValueNotifier<bool> isLoading = ValueNotifier(true);
 
-  SearchedMoviesController(
+  MoviesListController(
     this.context,
-    this.searchedText
+    this.urlParam
   );
 
   bool get mounted => context.mounted;
 
-  void initializeController(){
-    if(searchedText.isNotEmpty){
-      isLoading.value = true;
-      fetchSearchedMovies(1);
-    }
+  void initializeController() {
+    fetchMovies(1);
   }
 
-  void dispose(){
-    movies.dispose();
-    totalResults.dispose();
-    paginationStatus.dispose();
-    isLoading.dispose();
+  void dispose() {
   }
 
-  void fetchSearchedMovies(int page) async{
-    List<int> getSearchedMovies = await runFetchBasicMovieAPI(
-      '$mainAPIUrl/search/movie?query=$searchedText&page=$page'
+  void fetchMovies(int page) async{
+    List<int> getRatedMovies = await runFetchBasicMovieAPI(
+      '$urlParam&page=$page'
     );
-
+    
     if(mounted){
-      movies.value = [...movies.value, ...getSearchedMovies];
+      movies.value = [...movies.value, ...getRatedMovies];
       paginationStatus.value = PaginationStatus.loaded;
       isLoading.value = false;
     }
@@ -47,7 +41,7 @@ class SearchedMoviesController {
     if(mounted){
       paginationStatus.value = PaginationStatus.loading;
       Future.delayed(Duration(milliseconds: paginateDelayDuration), (){
-        fetchSearchedMovies(
+        fetchMovies(
           movies.value.length ~/ 20 + 1
         );
       });
@@ -61,7 +55,7 @@ class SearchedMoviesController {
       options: defaultAPIOption
     );
     if(res.statusCode == 200){
-      totalResults.value = min(maxSearchedResultsCount, res.data['total_results']);
+      totalResults.value = min(maxViewResultsCount, res.data['total_results']);
       var data = res.data['results'];
       for(int i = 0; i < data.length; i++){
         ids.add(data[i]['id']);

@@ -34,124 +34,64 @@ class _ViewSeasonDetailsStateful extends StatefulWidget {
 }
 
 class _ViewSeasonDetailsStatefulState extends State<_ViewSeasonDetailsStateful>{
-  SeasonDataClass? seasonData;
-  bool isLoading = true;
+  late SeasonDetailsController controller;
 
   @override
   void initState(){
     super.initState();
-    fetchSeasonDetails();
+    controller = SeasonDetailsController(context, widget.showID, widget.seasonNum);
+    controller.initializeController();
   }
 
   @override
   void dispose(){
     super.dispose();
-  }
-
-  void fetchSeasonDetails() async{
-    var res = await dio.get(
-      '$mainAPIUrl/tv/${widget.showID}/season/${widget.seasonNum}',
-      options: defaultAPIOption
-    );
-    if(res.statusCode == 200){
-      var data = res.data;
-      var userSeasonStatusReq = await dio.get(
-        '$mainAPIUrl/tv/${widget.showID}/season/${widget.seasonNum}/account_states',
-        options: defaultAPIOption
-      );
-      if(userSeasonStatusReq.statusCode == 200){
-        data['user_episodes_status'] = userSeasonStatusReq.data['results'];
-        var creditsReq = await dio.get(
-          '$mainAPIUrl/tv/${widget.showID}/season/${widget.seasonNum}/credits',
-          options: defaultAPIOption
-        );
-        if(creditsReq.statusCode == 200){
-          data['credits'] = {};
-          data['credits']['cast'] = creditsReq.data['cast'];
-          data['credits']['crew'] = creditsReq.data['crew'];
-          var imagesReq = await dio.get(
-            '$mainAPIUrl/tv/${widget.showID}/season/${widget.seasonNum}/images',
-            options: defaultAPIOption
-          );
-          if(imagesReq.statusCode == 200){
-            data['images'] = imagesReq.data['posters'];
-            data['show_id'] = widget.showID;
-            if(mounted){
-              setState((){
-                seasonData = SeasonDataClass.fromMap(data);
-                isLoading = false;
-              });
-            }
-          }else{
-            if(mounted){
-              handler.displaySnackbar(
-                context, 
-                SnackbarType.error, 
-                tErr.api
-              );
-            }    
-          }
-        }else{
-          if(mounted){
-            handler.displaySnackbar(
-              context, 
-              SnackbarType.error, 
-              tErr.api
-            );
-          }  
-        }
-      }else{
-        if(mounted){
-          handler.displaySnackbar(
-            context, 
-            SnackbarType.error, 
-            tErr.api
-          );
-        }  
-      }
-    }else{
-      if(mounted){
-        handler.displaySnackbar(
-          context, 
-          SnackbarType.error, 
-          tErr.api
-        );
-      }
-    }
+    controller.dispose();
   }
 
   @override
   Widget build(BuildContext context){
-    if(!isLoading && seasonData != null){
-      return Scaffold(
-        appBar: AppBar(
-          title: setAppBarTitle('Season Details'),
-          flexibleSpace: Container(
-            decoration: defaultAppBarDecoration,
-          ),
-        ),
-        body: CustomSeasonDetails(
-          seasonData: seasonData!, 
-          skeletonMode: false,
-          key: UniqueKey()
-        )
-      );
-    }else{
-      return Scaffold(
-        appBar: AppBar(
-          title: setAppBarTitle('Season Details'),
-          flexibleSpace: Container(
-            decoration: defaultAppBarDecoration,
-          ),
-        ),
-        body: shimmerSkeletonWidget(
-          CustomSeasonDetails(
-            seasonData: SeasonDataClass.generateNewInstance(-1), 
-            skeletonMode: true,
-            key: UniqueKey()
-          ),
-        )
-      );
-    }
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        controller.isLoading,
+        controller.seasonData
+      ]),
+      builder: (context, child) {
+        bool isLoading = controller.isLoading.value;
+        SeasonDataClass? seasonData = controller.seasonData.value;
+
+        if(!isLoading && seasonData != null){
+          return Scaffold(
+            appBar: AppBar(
+              title: setAppBarTitle('Season Details'),
+              flexibleSpace: Container(
+                decoration: defaultAppBarDecoration,
+              ),
+            ),
+            body: CustomSeasonDetails(
+              seasonData: seasonData, 
+              skeletonMode: false,
+              key: UniqueKey()
+            )
+          );
+        }else{
+          return Scaffold(
+            appBar: AppBar(
+              title: setAppBarTitle('Season Details'),
+              flexibleSpace: Container(
+                decoration: defaultAppBarDecoration,
+              ),
+            ),
+            body: shimmerSkeletonWidget(
+              CustomSeasonDetails(
+                seasonData: SeasonDataClass.generateNewInstance(-1), 
+                skeletonMode: true,
+                key: UniqueKey()
+              ),
+            )
+          );
+        }
+      }
+    );
   }
 }

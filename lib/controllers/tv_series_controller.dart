@@ -8,7 +8,7 @@ class TvSeriesController {
   ValueNotifier<List<int>> topRated = ValueNotifier([]);
   ValueNotifier<List<int>> onAir = ValueNotifier([]);
   ValueNotifier<List<int>> trending = ValueNotifier([]);
-  bool isLoading = true;
+  ValueNotifier<bool> isLoading = ValueNotifier(true);
 
   TvSeriesController(
     this.context
@@ -46,7 +46,7 @@ class TvSeriesController {
       popular.value = [...fetchPopular];
       topRated.value = [...fetchTopRated];
       onAir.value = [...fetchOnAir];
-      isLoading = false;
+      isLoading.value = false;
     }
   }
 

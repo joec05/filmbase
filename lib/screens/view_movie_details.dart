@@ -29,206 +29,63 @@ class _ViewMovieDetailsStateful extends StatefulWidget {
 }
 
 class _ViewMovieDetailsStatefulState extends State<_ViewMovieDetailsStateful>{
-  bool isLoading = true;
+  late MovieDetailsController controller;
 
   @override
   void initState(){
     super.initState();
-    fetchMovieComplete(widget.movieID);
+    controller = MovieDetailsController(context, widget.movieID);
+    controller.initializeController();
   }
 
   @override
   void dispose(){
     super.dispose();
-  }
-
-  void fetchMovieComplete(int id) async{
-    var detailsReq = await dio.get(
-      '$mainAPIUrl/movie/$id?language=en-US',
-      options: defaultAPIOption
-    );
-    if(detailsReq.statusCode == 200){
-      var detailsData = detailsReq.data;
-      var userMovieStatusReq = await dio.get(
-        '$mainAPIUrl/movie/$id/account_states',
-        options: defaultAPIOption
-      );
-      if(userMovieStatusReq.statusCode == 200){
-        detailsData['user_movie_status'] = userMovieStatusReq.data;
-        var creditsReq = await dio.get(
-          '$mainAPIUrl/movie/$id/credits?language=en-US',
-          options: defaultAPIOption
-        );
-        if(creditsReq.statusCode == 200){
-          detailsData['credits'] = creditsReq.data;
-          var imagesReq = await dio.get(
-            '$mainAPIUrl/movie/$id/images',
-            options: defaultAPIOption
-          );
-          if(imagesReq.statusCode == 200){
-            detailsData['images'] = imagesReq.data;
-            var keywordsReq = await dio.get(
-              '$mainAPIUrl/movie/$id/keywords',
-              options: defaultAPIOption
-            );
-            if(keywordsReq.statusCode == 200){
-              detailsData['keywords'] = keywordsReq.data['keywords'];
-              var listsReq = await dio.get(
-                '$mainAPIUrl/movie/$id/lists?language=en-US&page=1',
-                options: defaultAPIOption
-              );
-              if(listsReq.statusCode == 200){
-                detailsData['lists'] = listsReq.data['results'];
-                var recomsReq = await dio.get(
-                  '$mainAPIUrl/movie/$id/recommendations?language=en-US&page=1',
-                  options: defaultAPIOption
-                );
-                if(recomsReq.statusCode == 200){
-                  detailsData['recommendations'] = recomsReq.data['results'];
-                  for(int x = 0; x < recomsReq.data['results'].length; x++){
-                    updateMovieBasicData(recomsReq.data['results'][x]);
-                  }
-                  var reviewsReq = await dio.get(
-                    '$mainAPIUrl/movie/$id/reviews?language=en-US&page=1',
-                    options: defaultAPIOption
-                  );
-                  if(reviewsReq.statusCode == 200){
-                    detailsData['reviews'] = reviewsReq.data['results'];
-                    var similarReq = await dio.get(
-                      '$mainAPIUrl/movie/$id/similar?language=en-US&page=1',
-                      options: defaultAPIOption
-                    );
-                    if(similarReq.statusCode == 200){
-                      detailsData['similar'] = similarReq.data['results'];
-                      for(int x = 0; x < similarReq.data['results'].length; x++){
-                        updateMovieBasicData(similarReq.data['results'][x]);
-                      }
-                      if(mounted){
-                        setState((){
-                          updateMovieData(detailsData);
-                          isLoading = false;
-                        });
-                      }
-                    }else{
-                      if(mounted){
-                        handler.displaySnackbar(
-                          context, 
-                          SnackbarType.error, 
-                          tErr.api
-                        );
-                      }
-                    }
-                  }else{
-                    if(mounted){
-                      handler.displaySnackbar(
-                        context, 
-                        SnackbarType.error, 
-                        tErr.api
-                      );
-                    }
-                  }
-                }else{
-                  if(mounted){
-                    handler.displaySnackbar(
-                      context, 
-                      SnackbarType.error, 
-                      tErr.api
-                    );
-                  }
-                }
-              }else{
-                if(mounted){
-                  handler.displaySnackbar(
-                    context, 
-                    SnackbarType.error, 
-                    tErr.api
-                  );
-                }
-              }
-            }else{
-              if(mounted){
-                handler.displaySnackbar(
-                  context, 
-                  SnackbarType.error, 
-                  tErr.api
-                );
-              }
-            }  
-          }else{
-            if(mounted){
-              handler.displaySnackbar(
-                context, 
-                SnackbarType.error, 
-                tErr.api
-              );
-            }
-          }
-        }else{
-          if(mounted){
-            handler.displaySnackbar(
-              context, 
-              SnackbarType.error, 
-              tErr.api
-            );
-          }
-        }
-      }else{
-        if(mounted){
-          handler.displaySnackbar(
-            context, 
-            SnackbarType.error, 
-            tErr.api
-          );
-        }
-      }
-    }else{
-      if(mounted){
-        handler.displaySnackbar(
-          context, 
-          SnackbarType.error, 
-          tErr.api
-        );
-      }
-    }
+    controller.dispose();
   }
 
   @override
   Widget build(BuildContext context){
-    if(!isLoading && appStateRepo.globalMovies[widget.movieID] != null){
-      return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: defaultAppBarDecoration
-          ),
-          title: setAppBarTitle('Movie Details'),
-        ),
-        body: ValueListenableBuilder(
-          valueListenable: appStateRepo.globalMovies[widget.movieID]!.notifier, 
-          builder: (context, movieData, child){
-            return CustomMovieDetails(
-              movieData: movieData,
-              key: UniqueKey(),
-              skeletonMode: false
-            );
-          }
-        ),
-      );
-    }else{
-      return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: defaultAppBarDecoration
-          ),
-          title: setAppBarTitle('Movie Details'),
-        ),
-        body: shimmerSkeletonWidget(
-          CustomMovieDetails(
-            movieData: MovieDataClass.generateNewInstance(-1),
-            key: UniqueKey(),
-            skeletonMode: true
-          ),
-        ),
-      );
-    }
+    return ValueListenableBuilder(
+      valueListenable: controller.isLoading,
+      builder: (context, isLoading, child) {
+        if(!isLoading && appStateRepo.globalMovies[widget.movieID] != null){
+          return Scaffold(
+            appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: defaultAppBarDecoration
+              ),
+              title: setAppBarTitle('Movie Details'),
+            ),
+            body: ValueListenableBuilder(
+              valueListenable: appStateRepo.globalMovies[widget.movieID]!.notifier, 
+              builder: (context, movieData, child){
+                return CustomMovieDetails(
+                  movieData: movieData,
+                  key: UniqueKey(),
+                  skeletonMode: false
+                );
+              }
+            ),
+          );
+        }else{
+          return Scaffold(
+            appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: defaultAppBarDecoration
+              ),
+              title: setAppBarTitle('Movie Details'),
+            ),
+            body: shimmerSkeletonWidget(
+              CustomMovieDetails(
+                movieData: MovieDataClass.generateNewInstance(-1),
+                key: UniqueKey(),
+                skeletonMode: true
+              ),
+            ),
+          );
+        }
+      }
+    );
   }
 }

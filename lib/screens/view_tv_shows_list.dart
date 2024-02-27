@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:filmbase/global_files.dart';
 
@@ -31,142 +29,106 @@ class _ViewTvShowsListStateful extends StatefulWidget {
 }
 
 class _ViewTvShowsListStatefulState extends State<_ViewTvShowsListStateful>{
-  List<int> tvShows = [];
-  PaginationStatus paginationStatus = PaginationStatus.loaded;
-  int totalResults = 0;
-  bool isLoading = true;
+  late TvShowsListController controller;
 
   @override
   void initState(){
     super.initState();
-    fetchTvShows(1);
+    controller = TvShowsListController(context, widget.urlParam);
+    controller.initializeController();
   }
 
   @override
   void dispose(){
     super.dispose();
-  }
-
-  void fetchTvShows(int page) async{
-    List<int> getRatedTvShows = await runFetchBasicTvSeriesAPI(
-      '$mainAPIUrl/tv/${widget.urlParam}?page=$page'
-    );
-
-    if(mounted){
-      setState(() {
-        tvShows.addAll(getRatedTvShows);
-        paginationStatus = PaginationStatus.loaded;
-        isLoading = false;
-      });
-    }
-  }
-
-  void paginate() async{
-    if(mounted){
-      setState(() => paginationStatus = PaginationStatus.loading);
-      Future.delayed(Duration(milliseconds: paginateDelayDuration), (){
-        fetchTvShows(
-          tvShows.length ~/ 20 + 1
-        );
-      });
-    }
-  }
-
-  Future<List<int>> runFetchBasicTvSeriesAPI(String url) async{
-    List<int> ids = [];
-    var res = await dio.get(
-      url,
-      options: defaultAPIOption
-    );
-    if(res.statusCode == 200){
-      totalResults = min(maxViewResultsCount, res.data['total_results']);
-      var data = res.data['results'];
-      for(int i = 0; i < data.length; i++){
-        ids.add(data[i]['id']);
-        updateTvSeriesBasicData(data[i]);
-      }
-    }else{
-      if(mounted){
-        handler.displaySnackbar(
-          context, 
-          SnackbarType.error, 
-          tErr.api
-        );
-      }
-    }
-    return ids;
+    controller.dispose();
   }
 
   @override
   Widget build(BuildContext context){
-    if(!isLoading){
-      return Scaffold(
-        appBar: AppBar(
-          title: setAppBarTitle('TV Shows'),
-          flexibleSpace: Container(
-            decoration: defaultAppBarDecoration
-          ),
-        ),
-        body: LoadMoreBottom(
-          addBottomSpace: tvShows.length < totalResults,
-          loadMore: () async{
-            if(tvShows.length < totalResults){
-              paginate();
-            }
-          },
-          status: paginationStatus,
-          refresh: null,
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: <Widget>[
-              SliverList(delegate: SliverChildBuilderDelegate(
-                childCount: tvShows.length, 
-                (c, i) {
-                  if(appStateRepo.globalTvSeries[tvShows[i]] == null){
-                    return Container();
-                  }
-                  return ValueListenableBuilder(
-                    valueListenable: appStateRepo.globalTvSeries[tvShows[i]]!.notifier,
-                    builder: (context, tvSeriesData, child){
-                      return CustomBasicTvSeriesDisplay(
-                        tvSeriesData: tvSeriesData, 
-                        skeletonMode: false,
-                        key: UniqueKey(),
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        controller.isLoading,
+        controller.tvShows,
+        controller.paginationStatus,
+        controller.totalResults
+      ]),
+      builder: (context, child) {
+        bool isLoading = controller.isLoading.value;
+        List<int> tvShows = controller.tvShows.value;
+        int totalResults = controller.totalResults.value;
+        PaginationStatus paginationStatus = controller.paginationStatus.value;
+        
+        if(!isLoading){
+          return Scaffold(
+            appBar: AppBar(
+              title: setAppBarTitle('TV Shows'),
+              flexibleSpace: Container(
+                decoration: defaultAppBarDecoration
+              ),
+            ),
+            body: LoadMoreBottom(
+              addBottomSpace: tvShows.length < totalResults,
+              loadMore: () async{
+                if(tvShows.length < totalResults){
+                  controller.paginate();
+                }
+              },
+              status: paginationStatus,
+              refresh: null,
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: <Widget>[
+                  SliverList(delegate: SliverChildBuilderDelegate(
+                    childCount: tvShows.length, 
+                    (c, i) {
+                      if(appStateRepo.globalTvSeries[tvShows[i]] == null){
+                        return Container();
+                      }
+                      return ValueListenableBuilder(
+                        valueListenable: appStateRepo.globalTvSeries[tvShows[i]]!.notifier,
+                        builder: (context, tvSeriesData, child){
+                          return CustomBasicTvSeriesDisplay(
+                            tvSeriesData: tvSeriesData, 
+                            skeletonMode: false,
+                            key: UniqueKey(),
+                          );
+                        },
                       );
                     },
-                  );
-                },
-              )),
-            ],
-          ),
-        ),
-      );
-    }else{
-      return Scaffold(
-        appBar: AppBar(
-          title: setAppBarTitle('TV Shows'),
-          flexibleSpace: Container(
-            decoration: defaultAppBarDecoration
-          ),
-        ),
-        body: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: <Widget>[
-            SliverList(delegate: SliverChildBuilderDelegate(
-              childCount: shimmerDefaultLength, 
-              (c, i) {
-                return shimmerSkeletonWidget(
-                  CustomBasicTvSeriesDisplay(
-                    tvSeriesData: TvSeriesDataClass.generateNewInstance(-1), 
-                    skeletonMode: true,
-                    key: UniqueKey(),
-                  ),
-                );
-              },
-            )),
-          ],
-        ),
-      );
-    }
+                  )),
+                ],
+              ),
+            ),
+          );
+        }else{
+          return Scaffold(
+            appBar: AppBar(
+              title: setAppBarTitle('TV Shows'),
+              flexibleSpace: Container(
+                decoration: defaultAppBarDecoration
+              ),
+            ),
+            body: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: <Widget>[
+                SliverList(delegate: SliverChildBuilderDelegate(
+                  childCount: shimmerDefaultLength, 
+                  (c, i) {
+                    return shimmerSkeletonWidget(
+                      CustomBasicTvSeriesDisplay(
+                        tvSeriesData: TvSeriesDataClass.generateNewInstance(-1), 
+                        skeletonMode: true,
+                        key: UniqueKey(),
+                      ),
+                    );
+                  },
+                )),
+              ],
+            ),
+          );
+        }
+      }
+    );
   }
 }
