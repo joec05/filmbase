@@ -34,7 +34,7 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
 
   void modifyUserTvSeriesData(){
     TextEditingController ratingController = TextEditingController(
-      text: tvShowData.userTvSeriesStatus.score.toString()
+      text: max(0.5, tvShowData.userTvSeriesStatus.score).toString()
     );
     bool favourite = tvShowData.userTvSeriesStatus.favourite;
     bool watchlist = tvShowData.userTvSeriesStatus.watchlisted;
@@ -44,9 +44,8 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
         return StatefulBuilder(
           builder: (statefulBuilderContext, setState){
             return AlertDialog(
-              titlePadding: EdgeInsets.symmetric(vertical: getScreenHeight() * 0.015, horizontal: getScreenWidth() * 0.035),
+              titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
               contentPadding: const EdgeInsets.only(top: 0, bottom: 0),
-              title: const Text('Edit', textAlign: TextAlign.center,),
               content: Padding(
                 padding: EdgeInsets.symmetric(horizontal: getScreenWidth() * 0.035),
                 child: Column(
@@ -69,7 +68,7 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
                         prefixIcon: TextButton(
                           onPressed: (){
                             setState((){
-                              ratingController.text = max(0, double.parse(ratingController.text) - 0.5).toString();
+                              ratingController.text = max(0.5, double.parse(ratingController.text) - 0.5).toString();
                             });
                           },
                           child: const Icon(

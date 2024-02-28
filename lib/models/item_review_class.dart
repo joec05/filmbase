@@ -40,7 +40,7 @@ class ItemReviewClass{
 
   factory ItemReviewClass.generateNewInstance(){
     return ItemReviewClass(
-      '', '', '', '', '', 0, '', '', '', ''
+      '', '', '', '', '', 0.5, '', '', '', ''
     );
   }
 }

@@ -93,7 +93,7 @@ class EpisodeDataClass{
 
   factory EpisodeDataClass.generateNewInstance(int id){
     return EpisodeDataClass(
-      id, 0, '', '', '', 0, 0, 0, 0, 0, 0, '', '', [], [], [], []
+      id, 0, '', '', '', 0, 0, 0, 0.5, 0, 0, '', '', [], [], [], []
     );
   }
 }

@@ -86,7 +86,6 @@ class ApiCallRepository {
         watchlisted ? UpdateStreamActionType.add : UpdateStreamActionType.delete,
       )
     );
-
     await dio.post(
       '$mainAPIUrl/movie/$movieID/rating',
       data: jsonEncode({

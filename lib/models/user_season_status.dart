@@ -13,7 +13,7 @@ class UserEpisodeStatus{
     return UserEpisodeStatus(
       map['id'], 
       map['episode_number'], 
-      map['rated'] == false ? 0 : map['rated']['value']
+      map['rated'] == false ? 0.5 : map['rated']['value']
     );
   }
 }

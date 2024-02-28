@@ -33,7 +33,7 @@ class ListDetailsController {
     );
     if(res.statusCode == 200){
       var data = res.data;
-      totalResults = res.data['item_count'];
+      totalResults.value = res.data['item_count'];
       var items = res.data['items'];
       List<MediaItemClass> mediaItems = [];
       for(int i = 0; i < items.length; i++){

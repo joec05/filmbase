@@ -73,7 +73,7 @@ class RatedTvShowsController {
       options: defaultAPIOption
     );
     if(res.statusCode == 200){
-      totalResults = res.data['total_results'];
+      totalResults.value = res.data['total_results'];
       var data = res.data['results'];
       for(int i = 0; i < data.length; i++){
         ids.add(data[i]['id']);

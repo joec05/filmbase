@@ -22,7 +22,7 @@ class UserMovieTVStatus{
 
   factory UserMovieTVStatus.generateNewInstance(){
     return UserMovieTVStatus(
-      0, false, 0, false
+      0, false, 0.5, false
     );
   }
 }

@@ -18,10 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Filmbase',
-      theme: ThemeData(
-        colorScheme: const ColorScheme.dark(),
-        useMaterial3: true,
-      ),
+      theme: globalTheme.dark,
       home: const MyHomePage(title: 'Filmbase Home Page'),
     );
   }

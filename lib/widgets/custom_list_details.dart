@@ -40,9 +40,8 @@ class CustomListDetailsState extends State<CustomListDetails>{
         return StatefulBuilder(
           builder: (statefulBuilderContext, setState){
             return AlertDialog(
-              titlePadding: EdgeInsets.symmetric(vertical: getScreenHeight() * 0.015, horizontal: getScreenWidth() * 0.035),
+              titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
               contentPadding: const EdgeInsets.only(top: 0, bottom: 0),
-              title: const Text('Items', textAlign: TextAlign.center,),
               content: Container(
                 constraints: BoxConstraints(
                   maxHeight: getScreenHeight() * 0.85
@@ -159,9 +158,8 @@ class CustomListDetailsState extends State<CustomListDetails>{
         return StatefulBuilder(
           builder: (statefulBuilderContext, setState){
             return AlertDialog(
-              titlePadding: EdgeInsets.symmetric(vertical: getScreenHeight() * 0.015, horizontal: getScreenWidth() * 0.035),
+              titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
               contentPadding: EdgeInsets.only(top: 0, bottom: getScreenHeight() * 0.025),
-              title: const Text('Add movies', textAlign: TextAlign.center,),
               content: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: getScreenWidth() * 0.035),
@@ -186,31 +184,10 @@ class CustomListDetailsState extends State<CustomListDetails>{
                             onPressed: () async{
                               if(searchController.text.isNotEmpty){
                                 if(searchController.text.length < 4){
-                                  showDialog(
-                                    context: context,
-                                    builder: (dialogContext) {
-                                      return AlertDialog(
-                                        title: const Text('Alert', textAlign: TextAlign.center,),
-                                        titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text('Minimum 3 characters needed!!!', style: TextStyle(fontSize: defaultTextFontSize)),
-                                            SizedBox(
-                                              height: getScreenHeight() * 0.02,
-                                            ),
-                                            CustomButton(
-                                              width: getScreenWidth() * 0.5, 
-                                              height: getScreenHeight() * 0.06, 
-                                              buttonColor: Colors.orange, 
-                                              buttonText: 'OK', 
-                                              onTapped: () => Navigator.of(dialogContext).pop(), 
-                                              setBorderRadius: true
-                                            )
-                                          ]
-                                        )
-                                      );
-                                    }
+                                  handler.displaySnackbar(
+                                    context,
+                                    SnackbarType.error, 
+                                    tErr.minSearchLength
                                   );
                                 }else{
                                   var res = await dio.get(
@@ -372,9 +349,8 @@ class CustomListDetailsState extends State<CustomListDetails>{
         return StatefulBuilder(
           builder: (statefulBuilderContext, setState){
             return AlertDialog(
-              titlePadding: EdgeInsets.symmetric(vertical: getScreenHeight() * 0.015, horizontal: getScreenWidth() * 0.035),
+              titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
               contentPadding: EdgeInsets.only(top: 0, bottom: getScreenHeight() * 0.025),
-              title: const Text('Add TV shows', textAlign: TextAlign.center,),
               content: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: getScreenWidth() * 0.035),
@@ -399,31 +375,10 @@ class CustomListDetailsState extends State<CustomListDetails>{
                             onPressed: () async{
                               if(searchController.text.isNotEmpty){
                                 if(searchController.text.length < 4){
-                                  showDialog(
-                                    context: context,
-                                    builder: (dialogContext) {
-                                      return AlertDialog(
-                                        title: const Text('Alert', textAlign: TextAlign.center,),
-                                        titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text('Minimum 3 characters needed!!!', style: TextStyle(fontSize: defaultTextFontSize)),
-                                            SizedBox(
-                                              height: getScreenHeight() * 0.02,
-                                            ),
-                                            CustomButton(
-                                              width: getScreenWidth() * 0.5, 
-                                              height: getScreenHeight() * 0.06, 
-                                              buttonColor: Colors.orange, 
-                                              buttonText: 'OK', 
-                                              onTapped: () => Navigator.of(dialogContext).pop(), 
-                                              setBorderRadius: true
-                                            )
-                                          ]
-                                        )
-                                      );
-                                    }
+                                  handler.displaySnackbar(
+                                    context,
+                                    SnackbarType.error, 
+                                    tErr.minSearchLength
                                   );
                                 }else{
                                   var res = await dio.get(
@@ -578,7 +533,6 @@ class CustomListDetailsState extends State<CustomListDetails>{
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Select type', textAlign: TextAlign.center),
           titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -622,7 +576,6 @@ class CustomListDetailsState extends State<CustomListDetails>{
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Alert', textAlign: TextAlign.center),
           titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
           content: Column(
             mainAxisSize: MainAxisSize.min,

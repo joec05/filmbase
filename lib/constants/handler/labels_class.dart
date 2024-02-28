@@ -4,6 +4,8 @@ class ErrorLabels {
   final title = "Error!!!";
 
   final api = "Server error";
+
+  final minSearchLength = "Minimum 4 letters needed!!!";
   
 }
 

@@ -36,9 +36,8 @@ class CustomReviewDisplayState extends State<CustomReviewDisplay>{
         return StatefulBuilder(
           builder: (statefulBuilderContext, setState){
             return AlertDialog(
-              titlePadding: EdgeInsets.symmetric(vertical: getScreenHeight() * 0.015, horizontal: getScreenWidth() * 0.035),
+              titlePadding: EdgeInsets.only(top: getScreenHeight() * 0.025),
               contentPadding: const EdgeInsets.only(top: 0, bottom: 0),
-              title: const Text('Review', textAlign: TextAlign.center,),
               content: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultHorizontalPadding * 1.5,
