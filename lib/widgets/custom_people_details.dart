@@ -217,12 +217,7 @@ class CustomPeopleDetailsState extends State<CustomPeopleDetails>{
                         text: peopleData.credits.moviesCast[i].title, 
                         description: peopleData.credits.moviesCast[i].character,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewMovieDetails(
-                              movieID: peopleData.credits.moviesCast[i].id
-                            )
-                          );
+                          router.pushNamed('view-movie-details', pathParameters: {'movieID': peopleData.credits.moviesCast[i].id.toString()});
                         },
                         skeletonMode: false
                       );
@@ -258,12 +253,7 @@ class CustomPeopleDetailsState extends State<CustomPeopleDetails>{
                         text: peopleData.credits.tvShowsCast[i].title, 
                         description: peopleData.credits.tvShowsCast[i].character,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewTvShowDetails(
-                              tvShowID: peopleData.credits.tvShowsCast[i].id
-                            )
-                          );
+                          router.pushNamed('view-tv-show-details', pathParameters: {'tvShowID': peopleData.credits.tvShowsCast[i].id.toString()});
                         },
                         skeletonMode: false
                       );
@@ -299,12 +289,7 @@ class CustomPeopleDetailsState extends State<CustomPeopleDetails>{
                         text: peopleData.credits.moviesCrew[i].title, 
                         description: peopleData.credits.moviesCrew[i].job,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewMovieDetails(
-                              movieID: peopleData.credits.moviesCrew[i].id
-                            )
-                          );
+                          router.pushNamed('view-movie-details', pathParameters: {'movieID': peopleData.credits.moviesCrew[i].toString()});
                         },
                         skeletonMode: false
                       );
@@ -340,12 +325,7 @@ class CustomPeopleDetailsState extends State<CustomPeopleDetails>{
                         text: peopleData.credits.tvShowsCrew[i].title, 
                         description: peopleData.credits.tvShowsCrew[i].job,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewMovieDetails(
-                              movieID: peopleData.credits.tvShowsCrew[i].id
-                            )
-                          );
+                          router.pushNamed('view-movie-details', pathParameters: {'movieID': peopleData.credits.tvShowsCrew[i].toString()});
                         },
                         skeletonMode: false
                       );

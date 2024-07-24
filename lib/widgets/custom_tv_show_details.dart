@@ -829,13 +829,10 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
                         image: generateCachedImage(tvShowData.seasons[i].cover),
                         text: tvShowData.seasons[i].name, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewSeasonDetails(
-                              showID: tvShowData.id,
-                              seasonNum: tvShowData.seasons[i].seasonNum
-                            )
-                          );
+                          router.pushNamed('view-season-details', pathParameters: {
+                            'showID': tvShowData.id.toString(),
+                            'seasonNum': tvShowData.seasons[i].seasonNum.toString()
+                          });
                         },
                         skeletonMode: false
                       )
@@ -870,12 +867,9 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
                         image: generateCachedImage(tvShowData.creators[i].cover),
                         text: tvShowData.creators[i].name, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: tvShowData.creators[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {
+                            'personID': tvShowData.creators[i].id.toString()
+                          });
                         },
                         skeletonMode: false
                       );
@@ -911,12 +905,9 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
                         text: tvShowData.credits.casts[i].name, 
                         description: tvShowData.credits.casts[i].character,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: tvShowData.credits.casts[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {
+                            'personID': tvShowData.credits.casts[i].id.toString()
+                          });
                         },
                         skeletonMode: false
                       );
@@ -952,12 +943,9 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
                         text: tvShowData.credits.crews[i].name, 
                         description: tvShowData.credits.crews[i].job,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: tvShowData.credits.crews[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {
+                            'personID': tvShowData.credits.crews[i].id.toString()
+                          });
                         },
                         skeletonMode: false
                       );
@@ -1092,12 +1080,9 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
                         image: generateCachedImage(data.cover),
                         text: data.title, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewTvShowDetails(
-                              tvShowID: tvShowData.similar[i],
-                            )
-                          );
+                          router.pushNamed('view-tv-show-details', pathParameters: {
+                            'tvShowID': tvShowData.similar[i].toString()
+                          });
                         },
                         skeletonMode: false
                       );
@@ -1133,12 +1118,9 @@ class CustomTvShowDetailsState extends State<CustomTvShowDetails>{
                         image: generateCachedImage(data.cover),
                         text: data.title, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewTvShowDetails(
-                              tvShowID: tvShowData.recommendations[i],
-                            )
-                          );
+                          router.pushNamed('view-tv-show-details', pathParameters: {
+                            'tvShowID': tvShowData.recommendations[i].toString()
+                          });
                         },
                         skeletonMode: false
                       );

@@ -35,10 +35,7 @@ class CustomBasicMovieDisplayState extends State<CustomBasicMovieDisplay>{
       return InkWell(
         splashFactory: InkRipple.splashFactory,
         onTap: (){
-          delayNavigationPush(
-            context, 
-            ViewMovieDetails(movieID: movieData.id)
-          );
+          router.pushNamed('view-movie-details', pathParameters: {'movieID': movieData.id.toString()});
         },
         child: Container(
           padding: EdgeInsets.symmetric(

@@ -5,31 +5,21 @@ import 'package:flutter/material.dart';
 class AuthenticationRepository {
   Future<void> initialize(BuildContext context) async{
     bool mounted = context.mounted;
-    APIIdentifiersClass apiIdentifiersClass = await appStateRepo.appStorage.fetchAPIIdentifiers();
-    if(apiIdentifiersClass.sessionID == null){
+    APIIdentifiersClass? apiIdentifiersClass = await appStateRepo.appStorage.fetchAPIIdentifiers();
+    if(apiIdentifiersClass == null){
       String? requestToken = await authRepo.generateRequestToken();
       if(requestToken != null && mounted){
-        await Navigator.push(
-          context,
-          NavigationTransition(
-            page: ConnectAccountPage(
-              url: 'https://www.themoviedb.org/authenticate/$requestToken'
-            )
-          )
-        );
+        await router.pushNamed('connect-account', pathParameters: {'url': 'https://www.themoviedb.org/authenticate/$requestToken'});
         var res = await authRepo.generateSessionID(requestToken);
         if(res != null){
           appStateRepo.apiIdentifiers.sessionID = res['session_id'];
           apiCallRepo.updateUserID();
           apiCallRepo.fetchUserData();
           if(mounted){
-            Navigator.pushAndRemoveUntil(
-              context,
-              NavigationTransition(
-                page: const MainPageWidget()
-              ),
-              (Route<dynamic> route) => false
-            );
+            while(router.canPop()) {
+              router.pop();
+            }
+            router.push('/main-page');
           }
         }
       }
@@ -37,13 +27,10 @@ class AuthenticationRepository {
       appStateRepo.apiIdentifiers = apiIdentifiersClass;
       apiCallRepo.fetchUserData();
       if(mounted){
-        Navigator.pushAndRemoveUntil(
-          context,
-          NavigationTransition(
-            page: const MainPageWidget()
-          ),
-          (Route<dynamic> route) => false
-        );
+        while(router.canPop()) {
+          router.pop();
+        }
+        router.push('/main-page');
       }
     }
   }

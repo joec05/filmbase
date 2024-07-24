@@ -35,12 +35,7 @@ class CustomListDisplayState extends State<CustomListDisplay>{
       return InkWell(
         splashFactory: InkRipple.splashFactory,
         onTap: (){
-          delayNavigationPush(
-            context, 
-            ViewListDetails(
-              listID: listData.id
-            )
-          );
+          router.pushNamed('view-list-details', pathParameters: {'listID': listData.id.toString()});
         },
         child: Container(
           padding: EdgeInsets.symmetric(

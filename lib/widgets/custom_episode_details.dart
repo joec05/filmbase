@@ -358,12 +358,7 @@ class CustomEpisodeDetailsState extends State<CustomEpisodeDetails>{
                         image: generateCachedImage(episodeData.casts[i].cover),
                         text: episodeData.casts[i].name, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: episodeData.casts[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {'personID': episodeData.casts[i].toString()});
                         },
                         skeletonMode: false
                       );
@@ -398,12 +393,7 @@ class CustomEpisodeDetailsState extends State<CustomEpisodeDetails>{
                         image: generateCachedImage(episodeData.crews[i].cover),
                         text: episodeData.crews[i].name, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: episodeData.crews[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {'personID': episodeData.crews[i].toString()});
                         },
                         skeletonMode: false
                       );
@@ -438,12 +428,7 @@ class CustomEpisodeDetailsState extends State<CustomEpisodeDetails>{
                         image: generateCachedImage(episodeData.guestStars[i].cover),
                         text: episodeData.guestStars[i].name, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: episodeData.guestStars[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {'personID': episodeData.guestStars[i].toString()});
                         },
                         skeletonMode: false
                       );

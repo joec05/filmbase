@@ -666,12 +666,7 @@ class CustomMovieDetailsState extends State<CustomMovieDetails>{
                         text: movieData.credits.casts[i].name, 
                         description: movieData.credits.casts[i].character,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: movieData.credits.casts[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {'personID': movieData.credits.casts[i].toString()});
                         },
                         skeletonMode: false
                       );
@@ -707,12 +702,7 @@ class CustomMovieDetailsState extends State<CustomMovieDetails>{
                         text: movieData.credits.crews[i].name, 
                         description: movieData.credits.crews[i].job,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: movieData.credits.crews[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {'personID': movieData.credits.crews[i].id.toString()});
                         },
                         skeletonMode: false
                       );
@@ -842,12 +832,7 @@ class CustomMovieDetailsState extends State<CustomMovieDetails>{
                     image: generateCachedImage(movieData.collection!.cover),
                     text: movieData.collection!.name, 
                     onPressed: (){
-                      delayNavigationPush(
-                        context, 
-                        ViewCollectionDetails(
-                          collectionID: movieData.collection!.id,
-                        )
-                      );
+                      router.pushNamed('view-collection-details', pathParameters: {'collectionID': movieData.collection!.id.toString()});
                     },
                     skeletonMode: false
                   )
@@ -880,12 +865,7 @@ class CustomMovieDetailsState extends State<CustomMovieDetails>{
                         image: generateCachedImage(movieData.lists[i].cover),
                         text: movieData.lists[i].name,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewListDetails(
-                              listID: movieData.lists[i].id,
-                            )
-                          );
+                          router.pushNamed('view-list-details', pathParameters: {'listID': movieData.lists[i].id.toString()});
                         },
                         skeletonMode: false
                       );
@@ -921,12 +901,7 @@ class CustomMovieDetailsState extends State<CustomMovieDetails>{
                         image: generateCachedImage(data.cover),
                         text: data.title, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewMovieDetails(
-                              movieID: movieData.similar[i],
-                            )
-                          );
+                          router.pushNamed('view-movie-details', pathParameters: {'movieID': movieData.similar[i].toString()});
                         },
                         skeletonMode: false
                       );
@@ -962,12 +937,7 @@ class CustomMovieDetailsState extends State<CustomMovieDetails>{
                         image: generateCachedImage(data.cover),
                         text: data.title, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewMovieDetails(
-                              movieID: movieData.recommendations[i],
-                            )
-                          );
+                          router.pushNamed('view-movie-details', pathParameters: {'movieID': movieData.recommendations[i].toString()});
                         },
                         skeletonMode: false
                       );

@@ -35,12 +35,7 @@ class CustomCollectionDisplayState extends State<CustomCollectionDisplay>{
       return InkWell(
         splashFactory: InkRipple.splashFactory,
         onTap: (){
-          delayNavigationPush(
-            context, 
-            ViewCollectionDetails(
-              collectionID: collectionData.id
-            )
-          );
+          router.pushNamed('view-collection-details', pathParameters: {'collectionID': collectionData.id.toString()});
         },
         child: Container(
           padding: EdgeInsets.symmetric(

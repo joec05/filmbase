@@ -143,15 +143,12 @@ class CustomEpisodeDisplayState extends State<CustomEpisodeDisplay>{
       return InkWell(
         splashFactory: InkRipple.splashFactory,
         onTap: (){
-          delayNavigationPush(
-            context, 
-            ViewEpisodeDetails(
-              episodeID: episodeData.id, 
-              showID: episodeData.showID, 
-              seasonNum: episodeData.seasonNum,
-              episodeNum: episodeData.episodeNum
-            )
-          );
+          router.pushNamed('view-episode-details', pathParameters: {
+            'episodeID': episodeData.id.toString(), 
+            'showID': episodeData.showID.toString(), 
+            'seasonNum': episodeData.seasonNum.toString(),
+            'episodeNum': episodeData.episodeNum.toString()
+          });
         },
         child: Container(
           padding: EdgeInsets.symmetric(

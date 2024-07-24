@@ -18,14 +18,13 @@ class AppStorageClass{
     storage.write(key: apiIdentifiersDataKey, value: null);
   }
 
-  Future<APIIdentifiersClass> fetchAPIIdentifiers() async{
+  Future<APIIdentifiersClass?> fetchAPIIdentifiers() async{
     String? apiIdentifiersEncoded = await storage.read(key: apiIdentifiersDataKey); 
-    if(apiIdentifiersEncoded == null){
-      return apiIdentifiersClass;
-    }else{
-      return APIIdentifiersClass.fromMap(jsonDecode(apiIdentifiersEncoded));
+    if(apiIdentifiersEncoded == null) {
+      return null;
     }
-  }
+    return APIIdentifiersClass.fromMap(jsonDecode(apiIdentifiersEncoded));
+    }
 }
 
 final appStorageClass = AppStorageClass();

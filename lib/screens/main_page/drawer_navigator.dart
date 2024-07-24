@@ -88,12 +88,7 @@ class __DrawerNavigatorStatefulState extends State<_DrawerNavigatorStateful>{
             onTap: () {
               Navigator.pop(context);
               Future.delayed(const Duration(milliseconds: 450), (){
-                Navigator.push(
-                  parentContext,
-                  NavigationTransition(
-                    page: const ViewFavourites(initialIndex: 0)
-                  )
-                );
+                router.pushNamed('view-favourites', pathParameters: {'initialIndex': '0'});
               });
             },
           ),
@@ -118,12 +113,7 @@ class __DrawerNavigatorStatefulState extends State<_DrawerNavigatorStateful>{
             onTap: () {
               Navigator.pop(context);
               Future.delayed(const Duration(milliseconds: 450), (){
-                Navigator.push(
-                  parentContext,
-                  NavigationTransition(
-                    page: const ViewWatchlist(initialIndex: 0)
-                  )
-                );
+                router.pushNamed('view-watchlist', pathParameters: {'initialIndex': '0'});
               });
             },
           ),
@@ -148,12 +138,7 @@ class __DrawerNavigatorStatefulState extends State<_DrawerNavigatorStateful>{
             onTap: () {
               Navigator.pop(context);
               Future.delayed(const Duration(milliseconds: 450), (){
-                Navigator.push(
-                  parentContext,
-                  NavigationTransition(
-                    page: const ViewRated(initialIndex: 0)
-                  )
-                );
+                router.pushNamed('view-rated', pathParameters: {'initialIndex': '0'});
               });
             },
           ),
@@ -178,12 +163,7 @@ class __DrawerNavigatorStatefulState extends State<_DrawerNavigatorStateful>{
             onTap: () {
               Navigator.pop(context);
               Future.delayed(const Duration(milliseconds: 450), (){
-                Navigator.push(
-                  parentContext,
-                  NavigationTransition(
-                    page: const ViewLists()
-                  )
-                );
+                router.push('/view-lists');
               });
             },
           ),
@@ -209,13 +189,10 @@ class __DrawerNavigatorStatefulState extends State<_DrawerNavigatorStateful>{
               Navigator.pop(context);
               appStateRepo.appStorage.resetAPIIdentifiers();
               Future.delayed(const Duration(milliseconds: 450), (){
-                Navigator.pushAndRemoveUntil(
-                  parentContext,
-                  NavigationTransition(
-                    page: const MyApp(),
-                  ),
-                  (Route<dynamic> route) => false
-                );
+                while(router.canPop()) {
+                  router.pop();
+                }
+                router.push('/main');
               });
             },
           ),

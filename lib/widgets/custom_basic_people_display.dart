@@ -35,12 +35,7 @@ class CustomBasicPeopleDisplayState extends State<CustomBasicPeopleDisplay>{
       return InkWell(
         splashFactory: InkRipple.splashFactory,
         onTap: (){
-          delayNavigationPush(
-            context, 
-            ViewPeopleDetails(
-              personID: peopleData.id
-            )
-          );
+          router.pushNamed('view-people-details', pathParameters: {'personID': peopleData.id.toString()});
         },
         child: Container(
           padding: EdgeInsets.symmetric(

@@ -89,10 +89,7 @@ class _MoviesPageStatefulState extends State<_MoviesPageStateful> with Automatic
                               return InkWell(
                                 splashFactory: InkSplash.splashFactory,
                                 onTap: (){
-                                  delayNavigationPush(
-                                    context,
-                                    ViewMovieDetails(movieID: movieData.id)
-                                  );
+                                  router.pushNamed('view-movie-details', pathParameters: {'movieID': movieData.id.toString()});
                                 },
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
@@ -143,10 +140,7 @@ class _MoviesPageStatefulState extends State<_MoviesPageStateful> with Automatic
                         InkWell(
                           splashFactory: InkRipple.splashFactory,
                           onTap: (){
-                            delayNavigationPush(
-                              context, 
-                              ViewMoviesList(urlParam: controller.urlParams.value[i])
-                            );
+                            router.pushNamed('view-movie-list', pathParameters: {'urlParam': controller.urlParams.value[i]});
                           },
                           child: const Icon(Icons.arrow_right, size: 35)
                         )

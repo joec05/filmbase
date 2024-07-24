@@ -1,3 +1,5 @@
-String apiKey = '65af13ba33d6323612407872d98f83c4';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-String accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NWFmMTNiYTMzZDYzMjM2MTI0MDc4NzJkOThmODNjNCIsInN1YiI6IjY1ODQ0OGQ1MTgwZGVhNTI3MDhjODRiZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.9Lh3qTQcwbzGvhEaddwArIj6e5CDfjjjC024ve2sdpk';
+String apiKey = dotenv.env['API_KEY']!;
+
+String accessToken = dotenv.env['ACCESS_TOKEN']!;

@@ -172,12 +172,7 @@ class CustomCollectionDetailsState extends State<CustomCollectionDetails>{
                         image: generateCachedImage(movieData.cover),
                         text: movieData.title, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewMovieDetails(
-                              movieID: movieData.id
-                            )
-                          );
+                          router.pushNamed('view-movie-details', pathParameters: {'movieID': movieData.id.toString()});
                         },
                         skeletonMode: false
                       );
@@ -214,12 +209,7 @@ class CustomCollectionDetailsState extends State<CustomCollectionDetails>{
                         image: generateCachedImage(tvShowData.cover),
                         text: tvShowData.title, 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewTvShowDetails(
-                              tvShowID: tvShowData.id
-                            )
-                          );
+                          router.pushNamed('view-tv-show-details', pathParameters: {'tvShowID': tvShowData.id.toString()});
                         },
                         skeletonMode: false
                       );

@@ -207,15 +207,12 @@ class CustomSeasonDetailsState extends State<CustomSeasonDetails>{
                         text: seasonData.episodes[i].name, 
                         description: 'Episode ${seasonData.episodes[i].episodeNum}', 
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewEpisodeDetails(
-                              episodeID: seasonData.episodes[i].id, 
-                              showID: tvShowData.id, 
-                              seasonNum: seasonData.seasonNum, 
-                              episodeNum:seasonData.episodes[i].episodeNum
-                            )
-                          );
+                          router.pushNamed('view-episode-details', pathParameters: {
+                            'episodeID': seasonData.episodes[i].id.toString(), 
+                            'showID': tvShowData.id.toString(), 
+                            'seasonNum': seasonData.seasonNum.toString(), 
+                            'episodeNum':seasonData.episodes[i].episodeNum.toString()
+                          });
                         },
                         skeletonMode: false
                       )
@@ -251,12 +248,7 @@ class CustomSeasonDetailsState extends State<CustomSeasonDetails>{
                         text: seasonData.credits.casts[i].name, 
                         description: seasonData.credits.casts[i].character,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: seasonData.credits.casts[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {'personID': seasonData.credits.casts[i].id.toString()});
                         },
                         skeletonMode: false
                       );
@@ -292,12 +284,7 @@ class CustomSeasonDetailsState extends State<CustomSeasonDetails>{
                         text: seasonData.credits.crews[i].name, 
                         description: seasonData.credits.crews[i].job,
                         onPressed: (){
-                          delayNavigationPush(
-                            context, 
-                            ViewPeopleDetails(
-                              personID: seasonData.credits.crews[i].id
-                            )
-                          );
+                          router.pushNamed('view-people-details', pathParameters: {'personID': seasonData.credits.crews[i].id.toString()});
                         },
                         skeletonMode: false
                       );

@@ -98,10 +98,7 @@ class _TvSeriesPageStatefulState extends State<_TvSeriesPageStateful> with Autom
                               return InkWell(
                                 splashFactory: InkSplash.splashFactory,
                                 onTap: (){
-                                  delayNavigationPush(
-                                    context,
-                                    ViewTvShowDetails(tvShowID: tvShowData.id)
-                                  );
+                                  router.pushNamed('view-tv-show-details', pathParameters: {'tvShowID': tvShowData.id.toString()});
                                 },
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
@@ -152,10 +149,7 @@ class _TvSeriesPageStatefulState extends State<_TvSeriesPageStateful> with Autom
                         InkWell(
                           splashFactory: InkRipple.splashFactory,
                           onTap: (){
-                            delayNavigationPush(
-                              context, 
-                              ViewTvShowsList(urlParam: urlParams[i])
-                            );
+                            router.pushNamed('view-tv-shows-list', pathParameters: {'urlParam': urlParams[i]});
                           },
                           child: const Icon(Icons.arrow_right, size: 35)
                         )

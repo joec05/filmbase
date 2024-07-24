@@ -35,10 +35,7 @@ class CustomBasicTvSeriesDisplayState extends State<CustomBasicTvSeriesDisplay>{
       return InkWell(
         splashFactory: InkRipple.splashFactory,
         onTap: (){
-          delayNavigationPush(
-            context, 
-            ViewTvShowDetails(tvShowID: tvSeriesData.id)
-          );
+          router.pushNamed('view-tv-show-details', pathParameters: {'tvShowID': tvSeriesData.id.toString()});
         },
         child: Container(
           padding: EdgeInsets.symmetric(

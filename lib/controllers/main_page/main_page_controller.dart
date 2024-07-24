@@ -54,10 +54,7 @@ class MainPageController {
             InkWell(
               splashFactory: InkSplash.splashFactory,
               onTap: (){
-                delayNavigationPush(
-                  context,
-                  const SearchPageWidget()
-                );
+                router.push('/search-page');
               },
               child: const Padding(
                 padding: EdgeInsets.all(12.5),
@@ -81,10 +78,7 @@ class MainPageController {
             InkWell(
               splashFactory: InkSplash.splashFactory,
               onTap: (){
-                delayNavigationPush(
-                  context,
-                  const SearchPageWidget()
-                );
+                router.push('/search-page');
               },
               child: const Padding(
                 padding: EdgeInsets.all(12.5),
@@ -108,10 +102,7 @@ class MainPageController {
             InkWell(
               splashFactory: InkSplash.splashFactory,
               onTap: (){
-                delayNavigationPush(
-                  context,
-                  const SearchPageWidget()
-                );
+                router.push('/search-page');
               },
               child: const Padding(
                 padding: EdgeInsets.all(12.5),
